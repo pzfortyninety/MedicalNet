@@ -64,6 +64,7 @@ def test(data_loader, model, img_names, sets):
         [depth, height, width] = data.shape
         mask = probs[0]
         scale = [1, depth*1.0/mask_d, height*1.0/mask_h, width*1.0/mask_w]
+        mask = mask.cpu().numpy()
         mask = ndimage.zoom(mask, scale, order=1)
         mask = np.argmax(mask, axis=0)
         
