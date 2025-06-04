@@ -24,6 +24,7 @@ def seg_eval(pred, label, clss):
     Ncls = len(clss)
     dices = np.zeros(Ncls)
     [depth, height, width] = pred.shape
+    print("pred shape: {}, label shape: {}".format(pred.shape, label.shape))
     for idx, cls in enumerate(clss):
         # binary map
         pred_cls = np.zeros([depth, height, width])
@@ -78,6 +79,10 @@ if __name__ == '__main__':
     sets = parse_opts()
     sets.target_type = "normal"
     sets.phase = 'test'
+    if not sets.no_cuda:
+        print("Using GPU for testing")
+    else:
+        print("Using CPU for testing")
 
     # getting model
     checkpoint = torch.load(sets.resume_path)
@@ -85,7 +90,7 @@ if __name__ == '__main__':
     net.load_state_dict(checkpoint['state_dict'])
 
     # data tensor
-    testing_data =BrainS18Dataset(sets.data_root, sets.img_list, sets)
+    testing_data = BrainS18Dataset(sets.data_root, sets.img_list, sets)
     data_loader = DataLoader(testing_data, batch_size=1, shuffle=False, num_workers=1, pin_memory=False)
 
     # testing
@@ -102,6 +107,6 @@ if __name__ == '__main__':
         dices[idx, :] = seg_eval(masks[idx], label, range(sets.n_seg_classes))
     
     # print result
-    for idx in range(1, sets.n_seg_classes):
+    for idx in range(0, sets.n_seg_classes):
         mean_dice_per_task = np.mean(dices[:, idx])
         print('mean dice for class-{} is {}'.format(idx, mean_dice_per_task))   
