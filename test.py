@@ -64,9 +64,9 @@ def test(data_loader, model, test_img_names, settings):
         [depth, height, width] = original_data.shape
         output_mask = probs[0] # shape = [num_classes, mask_d, mask_h, mask_w]
         scale = [1, depth*1.0/mask_d, height*1.0/mask_h, width*1.0/mask_w]
-        output_mask = output_mask.cpu().numpy()
+        output_mask = output_mask.cpu().numpy() # output_masks is numpy
         output_mask = ndimage.zoom(output_mask, scale, order=1)
-        output_mask = np.argmax(output_mask, axis=0) # shape = [depth, height, width] with voxel values from 0 to num_classes-1
+        output_mask = np.argmax(output_mask, axis=0) # shape = [depth, height, width] with voxel values from 0 to num_classes-1; still numpy
         
         output_masks.append(output_mask)
  
@@ -95,6 +95,7 @@ if __name__ == '__main__':
     # testing
     test_img_names = [info.split(" ")[0] for info in load_lines(settings.img_list)]
     output_masks = test(data_loader, net, test_img_names, settings)
+    np.save('output_mask.npy', output_masks[0])  # save output masks for further evaluation
     
     # evaluation: calculate dice 
     label_names = [info.split(" ")[1] for info in load_lines(settings.img_list)]

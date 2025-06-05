@@ -1,8 +1,3 @@
-'''
-Configs for training & testing
-Written by Whalechen
-'''
-
 import argparse
 
 def parse_opts():
