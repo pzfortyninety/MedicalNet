@@ -211,7 +211,6 @@ class ResNet(nn.Module):
         x = self.layer3(x)
         x = self.layer4(x)
         x = self.conv_seg(x)
-
         return x
 
 def resnet10(**kwargs):

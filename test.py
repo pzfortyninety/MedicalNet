@@ -46,67 +46,66 @@ def seg_eval(pred, label, clss):
 
     return dices
 
-def test(data_loader, model, img_names, sets):
-    masks = []
-    model.eval() # for testing 
+def test(data_loader, model, test_img_names, settings):
+    output_masks = []
+    model.eval()
     for batch_id, batch_data in enumerate(data_loader):
-        # forward
         volume = batch_data
-        if not sets.no_cuda:
+        if not settings.no_cuda:
             volume = volume.cuda()
         with torch.no_grad():
-            probs = model(volume)
-            probs = F.softmax(probs, dim=1)
+            logits = model(volume)
+            probs = F.softmax(logits, dim=1)
 
         # resize mask to original size
-        [batchsize, _, mask_d, mask_h, mask_w] = probs.shape
-        data = nib.load(os.path.join(sets.data_root, img_names[batch_id]))
-        data = data.get_fdata()
-        [depth, height, width] = data.shape
-        mask = probs[0]
+        [batchsize, num_classes, mask_d, mask_h, mask_w] = probs.shape
+        original_data = nib.load(os.path.join(settings.data_root, test_img_names[batch_id]))
+        original_data = original_data.get_fdata() # numpy
+        [depth, height, width] = original_data.shape
+        output_mask = probs[0] # shape = [num_classes, mask_d, mask_h, mask_w]
         scale = [1, depth*1.0/mask_d, height*1.0/mask_h, width*1.0/mask_w]
-        mask = mask.cpu().numpy()
-        mask = ndimage.zoom(mask, scale, order=1)
-        mask = np.argmax(mask, axis=0)
+        output_mask = output_mask.cpu().numpy()
+        output_mask = ndimage.zoom(output_mask, scale, order=1)
+        output_mask = np.argmax(output_mask, axis=0) # shape = [depth, height, width] with voxel values from 0 to num_classes-1
         
-        masks.append(mask)
+        output_masks.append(output_mask)
  
-    return masks
+    return output_masks
 
 
 if __name__ == '__main__':
-    # settting
-    sets = parse_opts()
-    sets.target_type = "normal"
-    sets.phase = 'test'
-    if not sets.no_cuda:
+    # get setttings
+    settings = parse_opts()
+    settings.target_type = "normal"
+    settings.phase = 'test'
+    if not settings.no_cuda:
         print("Using GPU for testing")
     else:
         print("Using CPU for testing")
 
     # getting model
-    checkpoint = torch.load(sets.resume_path)
-    net, _ = generate_model(sets)
-    net.load_state_dict(checkpoint['state_dict'])
+    training_checkpoint_path = torch.load(settings.resume_path) # selected training checkpoint
+    net, _ = generate_model(settings)
+    net.load_state_dict(training_checkpoint_path['state_dict'])
 
     # data tensor
-    testing_data = BrainS18Dataset(sets.data_root, sets.img_list, sets)
+    testing_data = BrainS18Dataset(settings.data_root, settings.img_list, settings)
     data_loader = DataLoader(testing_data, batch_size=1, shuffle=False, num_workers=1, pin_memory=False)
 
     # testing
-    img_names = [info.split(" ")[0] for info in load_lines(sets.img_list)]
-    masks = test(data_loader, net, img_names, sets)
+    test_img_names = [info.split(" ")[0] for info in load_lines(settings.img_list)]
+    output_masks = test(data_loader, net, test_img_names, settings)
     
     # evaluation: calculate dice 
-    label_names = [info.split(" ")[1] for info in load_lines(sets.img_list)]
+    label_names = [info.split(" ")[1] for info in load_lines(settings.img_list)]
     Nimg = len(label_names)
-    dices = np.zeros([Nimg, sets.n_seg_classes])
+    dices = np.zeros([Nimg, settings.n_seg_classes])
     for idx in range(Nimg):
-        label = nib.load(os.path.join(sets.data_root, label_names[idx]))
+        label = nib.load(os.path.join(settings.data_root, label_names[idx]))
         label = label.get_fdata()
-        dices[idx, :] = seg_eval(masks[idx], label, range(sets.n_seg_classes))
+        dices[idx, :] = seg_eval(output_masks[idx], label, range(settings.n_seg_classes))
     
     # print result
-    for idx in range(0, sets.n_seg_classes):
+    for idx in range(0, settings.n_seg_classes):
         mean_dice_per_task = np.mean(dices[:, idx])
         print('mean dice for class-{} is {}'.format(idx, mean_dice_per_task))   
