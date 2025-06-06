@@ -103,7 +103,6 @@ MedicalNet/
     |   |--resnet.py：3D-ResNet network build script
     |--utils/：tools
     |   |--logger.py：Logging script
-    |--toy_data/：For CI test
     |--data/：Data storage module
     |   |--MRBrainS18/：MRBrainS18 dataset
     |	|   |--images/：source image named with patient ID
