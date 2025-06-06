@@ -13,7 +13,7 @@ RNG_SEED = 1
 MODEL_TYPE = 'resnet'
 NEW_LAYER_NAMES = ['conv_seg']
 MODEL_DEPTH = 50
-RESNET_SHORTCUT = 'B' # A = average pooling + zero padding, B = learnable 1x1x1 convolution + batch nor
+RESNET_SHORTCUT = 'B' # A = hardcoded downsampling, B = learnable conv + batch norm for downsampling
 LEARNING_RATE = 0.001  # Set to 0.001 when finetuning
 NUM_EPOCHS = 200
 
