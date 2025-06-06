@@ -39,6 +39,5 @@ medicalnet_env/
 
 # My configurations:
 data
-pretrained
+pretrained_models
 models
-temp

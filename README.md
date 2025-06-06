@@ -78,18 +78,7 @@ We transferred the above pre-trained models to the multi-class segmentation task
 2. [Installation](#Installation)
 3. [Demo](#Demo)
 4. [Experiments](#Experiments)
-5. [TODO](#TODO)
 6. [Acknowledgement](#Acknowledgement)
-
-### Requirements
-- Python 3.7.0
-- PyTorch-0.4.1
-- CUDA Version 9.0
-- CUDNN 7.0.5
-
-### Installation
-- Install Python 3.7.0
-- pip install -r requirements.txt
 
 
 ### Demo
@@ -128,11 +117,6 @@ resnet_50.pth: --model resnet --model_depth 50 --resnet_shortcut B
 resnet_101.pth: --model resnet --model_depth 101 --resnet_shortcut B
 resnet_152.pth: --model resnet --model_depth 152 --resnet_shortcut B
 resnet_200.pth: --model resnet --model_depth 200 --resnet_shortcut B
-```
-
-4. Run the testing code (e.g. 3D-ResNet-50)
-```
-python test.py --gpu_id 0 --resume_path trails/models/resnet_50_epoch_199_batch_0.pth.tar --img_list data/val.txt
 ```
 
 ### Experiments
@@ -281,14 +265,6 @@ Results of transfer MedicalNet pre-trained models to lung segmentation (LungSeg)
 </table>
 
 - Please refer to [Med3D: Transfer Learning for 3D Medical Image Analysis](https://arxiv.org/abs/1904.00625) for more details：
-
-### TODO
-- [x] 3D-ResNet series pre-trained models
-- [x] Transfer learning training code
-- [x] Training with multi-gpu
-- [ ] 3D efficient pre-trained models（e.g., 3D-MobileNet, 3D-ShuffleNet）
-- [ ] 2D medical pre-trained models
-- [x] Pre-trained MedicalNet models based on more medical dataset
 
 ### Acknowledgement
 We thank [3D-ResNets-PyTorch](https://github.com/kenshohara/3D-ResNets-PyTorch) and [MRBrainS18](https://mrbrains18.isi.uu.nl/) which we build MedicalNet refer to this releasing code and the dataset.

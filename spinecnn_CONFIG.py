@@ -1,33 +1,33 @@
-# Data paths
+
+# Data settings
 DATA_FOLDER = './data'
 TRAINING_DATA_LIST = './data/train.txt'
 TESTING_DATA_LIST = './data/test.txt'
-
-# Data settings
 INPUT_D = 56
 INPUT_H = 448
 INPUT_W = 448
+NUM_CLASSES = 2
+
+# HYPERPARAMETERS
+RNG_SEED = 1
+MODEL_TYPE = 'resnet'
+NEW_LAYER_NAMES = ['conv_seg']
+MODEL_DEPTH = 50
+RESNET_SHORTCUT = 'B' # A = average pooling + zero padding, B = learnable 1x1x1 convolution + batch nor
+LEARNING_RATE = 0.001  # Set to 0.001 when finetuning
+NUM_EPOCHS = 200
 
 # Model settings
-CHECKPOINT_PATH = ''
-PRETRAIN_PATH = 'pretrain/resnet_50.pth'
-NEW_LAYER_NAMES = ['conv_seg']
-MODEL_TYPE = 'resnet'
-MODEL_DEPTH = 50
-RESNET_SHORTCUT = 'B'
+CHECKPOINT_PATH = 'models/resnet_50_epoch_199_batch_0.pth.tar'
+PRETRAIN_PATH = 'pretrained_models/resnet_50_23dataset.pth'
+SAVE_INTERVALS = 10
 SAVE_FOLDER = f"./trails/models/{MODEL_TYPE}_{MODEL_DEPTH}"
+PHASE = 'train'
 
 # GPU settings
 NO_CUDA = False
 GPU_ID = [0]  # List[int], e.g., [0, 1] for multi-GPU or [0] for single GPU
 PIN_MEMORY = True if not NO_CUDA else False
-
-# Training settings
-NUM_CLASSES = 2
-LEARNING_RATE = 0.001  # Set to 0.001 when finetuning
 NUM_WORKERS = 4
 BATCH_SIZE = 1
-PHASE = 'train'
-SAVE_INTERVALS = 10
-NUM_EPOCHS = 200
-RNG_SEED = 1
+
