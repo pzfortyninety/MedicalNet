@@ -1,7 +1,6 @@
 import torch
 from torch import nn
-from models import resnet
-
+from model_zoo import resnet
 
 def generate_model(MODEL_TYPE, MODEL_DEPTH,
                    INPUT_W, INPUT_H, INPUT_D, NUM_CLASSES,

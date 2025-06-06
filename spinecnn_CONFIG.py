@@ -19,7 +19,7 @@ SAVE_FOLDER = f"./trails/models/{MODEL_TYPE}_{MODEL_DEPTH}"
 
 # GPU settings
 NO_CUDA = False
-GPU_ID = None  # List[int], e.g., [0, 1]
+GPU_ID = [0]  # List[int], e.g., [0, 1] for multi-GPU or [0] for single GPU
 PIN_MEMORY = True if not NO_CUDA else False
 
 # Training settings

@@ -39,5 +39,6 @@ medicalnet_env/
 
 # My configurations:
 data
-pretrain
-trails
+pretrained
+models
+temp

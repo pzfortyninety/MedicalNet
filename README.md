@@ -130,25 +130,6 @@ resnet_152.pth: --model resnet --model_depth 152 --resnet_shortcut B
 resnet_200.pth: --model resnet --model_depth 200 --resnet_shortcut B
 ```
 
-- After successfully completing basic installation, you'll be ready to run the demo.
-1. Clone the MedicalNet repository
-```
-git clone https://github.com/Tencent/MedicalNet
-```
-2. Download data & pre-trained models ([Google Drive](https://drive.google.com/file/d/13tnSvXY7oDIEloNFiGTsjUIYfS3g3BfG/view?usp=sharing) or [Tencent Weiyun](https://share.weiyun.com/55sZyIx))
-
-    Unzip and move files
-```
-mv MedicalNet_pytorch_files.zip MedicalNet/.
-cd MedicalNet
-unzip MedicalNet_pytorch_files.zip
-```
-3. Run the training code (e.g. 3D-ResNet-50)
-```
-python train.py --gpu_id 0 1    # multi-gpu training on gpu 0,1
-or
-python train.py --gpu_id 0    # single-gpu training on gpu 0
-```
 4. Run the testing code (e.g. 3D-ResNet-50)
 ```
 python test.py --gpu_id 0 --resume_path trails/models/resnet_50_epoch_199_batch_0.pth.tar --img_list data/val.txt
